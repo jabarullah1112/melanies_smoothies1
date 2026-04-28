@@ -13,7 +13,7 @@ st.title("🍹 Smoothie Order App")
 # 🔹 Name input
 name_on_order = st.text_input("Enter your name")
 
-# 🔹 Load fruits
+# 🔹 Load fruits (FIRST இதை define பண்ணணும்)
 pd_df = session.table("smoothies.public.fruit_options").to_pandas()
 
 st.subheader("Available Fruits")
@@ -28,10 +28,10 @@ ingredients_list = st.multiselect("Choose fruits", fruit_name_list)
 # 🔹 API section
 st.subheader("🍎 Nutrition Info")
 
-# ✅ ONLY ONE LOOP
+# ✅ Correct loop
 for fruit_chosen in ingredients_list:
 
-    # 🔹 SEARCH_ON value எடுக்க
+    # 🔹 SEARCH_ON value (இப்போ தான் safe)
     search_on = pd_df.loc[
         pd_df['FRUIT_NAME'] == fruit_chosen,
         'SEARCH_ON'
@@ -39,7 +39,7 @@ for fruit_chosen in ingredients_list:
 
     st.write("Fetching data for:", fruit_chosen)
 
-    # 🔹 API call
+    # 🔹 API call (இங்க தான் use பண்ணணும்)
     response = requests.get(
         f"https://my.smoothiefroot.com/api/fruit/{search_on}"
     )
