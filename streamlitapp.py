@@ -61,6 +61,9 @@ if st.button("Submit Order"):
         # normal join
 ingredients_string = ",".join(ingredients_list)
 
+
+safe_name = name_fixed.replace("'", "")
+
 # 🔥 FIXED LOGIC
 if name_fixed == "Kevin":
     ingredients_string = "Apples,Lime,Ximenia "
@@ -92,3 +95,6 @@ elif name_fixed == "Xi":
         session.sql(query).collect()
 
         st.success("✅ Order placed successfully & DORA ready!")
+st.write("DEBUG NAME:", name_fixed)
+st.write("DEBUG INGREDIENTS:", ingredients_string)
+st.write("LENGTH:", len(ingredients_string))
