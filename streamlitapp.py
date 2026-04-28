@@ -14,40 +14,47 @@ st.title("🍹 Smoothie Order App")
 name_on_order = st.text_input("Enter your name")
 
 # 🔹 Load fruits
-fruit_df = session.table("smoothies.public.fruit_options").to_pandas()
+pd_df = session.table("smoothies.public.fruit_options").to_pandas()
 
 st.subheader("Available Fruits")
-st.dataframe(fruit_df, hide_index=True)
+st.dataframe(pd_df, hide_index=True)
 
-# 🔹 Fruit mapping
-fruit_name_list = fruit_df["FRUIT_NAME"].tolist()
-fruit_map = dict(zip(fruit_df["FRUIT_NAME"], fruit_df["SEARCH_ON"]))
+# 🔹 Fruit list
+fruit_name_list = pd_df["FRUIT_NAME"].tolist()
 
-# 🔹 Multiselect
+# 🔹 Multiselect (ONLY ONE)
 ingredients_list = st.multiselect("Choose fruits", fruit_name_list)
 
 # 🔹 API section
 st.subheader("🍎 Nutrition Info")
 
-for fruit in ingredients_list:
-    search_value = fruit_map.get(fruit)
+# 🔥 Correct loop
+for fruit_chosen in ingredients_list:
 
-    if search_value:
-        response = requests.get(
-            f"https://my.smoothiefroot.com/api/fruit/{search_value}"
-        )
+    # 🔹 SEARCH_ON value எடுக்க
+    search_on = pd_df.loc[
+        pd_df['FRUIT_NAME'] == fruit_chosen,
+        'SEARCH_ON'
+    ].iloc[0]
 
-        if response.status_code == 200:
-            data = response.json()
-            sf_df = pd.DataFrame([data])
-            st.dataframe(sf_df)
-        else:
-            st.warning("API error")
+    st.write("Fetching data for:", fruit_chosen)
+
+    # 🔹 API call
+    response = requests.get(
+        f"https://my.smoothiefroot.com/api/fruit/{search_on}"
+    )
+
+    if response.status_code == 200:
+        data = response.json()
+        sf_df = pd.DataFrame([data])
+        st.dataframe(sf_df)
+    else:
+        st.warning("API error")
 
 # 🔹 Checkbox
 order_filled = st.checkbox("Order Filled")
 
-# 🔹 Submit button (ONLY ONE)
+# 🔹 Submit
 if st.button("Submit Order"):
 
     if not name_on_order or not ingredients_list:
