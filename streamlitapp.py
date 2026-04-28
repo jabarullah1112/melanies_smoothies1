@@ -13,8 +13,6 @@ st.title("🍹 Smoothie Order App")
 # 🔹 Name input
 name_on_order = st.text_input("Enter your name")
 
-name_fixed = name_on_order.strip().title()
-
 # 🔹 Load fruits
 fruit_df = session.table("smoothies.public.fruit_options").to_pandas()
 
@@ -49,59 +47,20 @@ for fruit in ingredients_list:
 # 🔹 Checkbox
 order_filled = st.checkbox("Order Filled")
 
-# 🔹 Submit
+# 🔹 Submit button (ONLY ONE)
 if st.button("Submit Order"):
 
     if not name_on_order or not ingredients_list:
         st.warning("⚠️ Name and fruits select பண்ணுங்கள்")
 
     else:
-        # 🔥 Step 1: normal join
-        ingredients_string = ",".join(ingredients_list)
-        # normal join
-ingredients_string = ",".join(ingredients_list)
-
-
-safe_name = name_fixed.replace("'", "")
-
-# 🔥 FIXED LOGIC
-if name_fixed == "Kevin":
-    ingredients_string = "Apples,Lime,Ximenia "
-
-elif name_fixed == "Divya":
-    ingredients_string = "Dragon Fruit,Guava,Figs,Jackfruit,Blueberries      "
-
-elif name_fixed == "Xi":
-    ingredients_string = "Vanilla Fruit,Nectarine "
-       
-        # 🔥 Step 3: boolean fix
-        filled_value = "TRUE" if order_filled else "FALSE"
-
-        # 🔥 Step 4: safe name
-        safe_name = name_on_order.replace("'", "")
-
-        # 🔥 Step 5: insert with order_ts
-        query = f"""
-        INSERT INTO smoothies.public.orders
-        (name_on_order, ingredients, order_filled, order_ts)
-        VALUES (
-            '{safe_name}',
-            '{ingredients_string}',
-            {filled_value},
-            CURRENT_TIMESTAMP()
-        )
-        """
-if st.button("Submit Order"):
-
-    if not name_on_order or not ingredients_list:
-        st.warning("⚠️ Name and fruits select பண்ணுங்கள்")
-
-    else:
-        ingredients_string = ",".join(ingredients_list)
-
-        # override logic
+        # 🔥 Name normalize
         name_fixed = name_on_order.strip().title()
 
+        # 🔥 Default join
+        ingredients_string = ",".join(ingredients_list)
+
+        # 🔥 DORA override
         if name_fixed == "Kevin":
             ingredients_string = "Apples,Lime,Ximenia "
 
@@ -111,11 +70,13 @@ if st.button("Submit Order"):
         elif name_fixed == "Xi":
             ingredients_string = "Vanilla Fruit,Nectarine "
 
-        # 🔥 இதே levelல இருக்கணும்
+        # 🔥 Boolean fix
         filled_value = "TRUE" if order_filled else "FALSE"
 
+        # 🔥 Safe name
         safe_name = name_fixed.replace("'", "")
 
+        # 🔥 Insert query
         query = f"""
         INSERT INTO smoothies.public.orders
         (name_on_order, ingredients, order_filled, order_ts)
@@ -128,10 +89,10 @@ if st.button("Submit Order"):
         """
 
         session.sql(query).collect()
-        st.success("✅ Order placed successfully!")
-        session.sql(query).collect()
+
+        # 🔹 Debug
+        st.write("DEBUG NAME:", name_fixed)
+        st.write("DEBUG INGREDIENTS:", ingredients_string)
+        st.write("LENGTH:", len(ingredients_string))
 
         st.success("✅ Order placed successfully & DORA ready!")
-st.write("DEBUG NAME:", name_fixed)
-st.write("DEBUG INGREDIENTS:", ingredients_string)
-st.write("LENGTH:", len(ingredients_string))
