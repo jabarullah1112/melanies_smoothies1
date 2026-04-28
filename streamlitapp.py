@@ -22,13 +22,13 @@ st.dataframe(pd_df, hide_index=True)
 # 🔹 Fruit list
 fruit_name_list = pd_df["FRUIT_NAME"].tolist()
 
-# 🔹 Multiselect (ONLY ONE)
+# 🔹 Multiselect
 ingredients_list = st.multiselect("Choose fruits", fruit_name_list)
 
 # 🔹 API section
 st.subheader("🍎 Nutrition Info")
 
-# 🔥 Correct loop
+# ✅ ONLY ONE LOOP
 for fruit_chosen in ingredients_list:
 
     # 🔹 SEARCH_ON value எடுக்க
