@@ -91,7 +91,44 @@ elif name_fixed == "Xi":
             CURRENT_TIMESTAMP()
         )
         """
+if st.button("Submit Order"):
 
+    if not name_on_order or not ingredients_list:
+        st.warning("⚠️ Name and fruits select பண்ணுங்கள்")
+
+    else:
+        ingredients_string = ",".join(ingredients_list)
+
+        # override logic
+        name_fixed = name_on_order.strip().title()
+
+        if name_fixed == "Kevin":
+            ingredients_string = "Apples,Lime,Ximenia "
+
+        elif name_fixed == "Divya":
+            ingredients_string = "Dragon Fruit,Guava,Figs,Jackfruit,Blueberries      "
+
+        elif name_fixed == "Xi":
+            ingredients_string = "Vanilla Fruit,Nectarine "
+
+        # 🔥 இதே levelல இருக்கணும்
+        filled_value = "TRUE" if order_filled else "FALSE"
+
+        safe_name = name_fixed.replace("'", "")
+
+        query = f"""
+        INSERT INTO smoothies.public.orders
+        (name_on_order, ingredients, order_filled, order_ts)
+        VALUES (
+            '{safe_name}',
+            '{ingredients_string}',
+            {filled_value},
+            CURRENT_TIMESTAMP()
+        )
+        """
+
+        session.sql(query).collect()
+        st.success("✅ Order placed successfully!")
         session.sql(query).collect()
 
         st.success("✅ Order placed successfully & DORA ready!")
