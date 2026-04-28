@@ -26,7 +26,11 @@ ingredients_list = st.multiselect("Choose fruits", fruit_name_list)
 
 
 
+smoothiefroot_response = requests.get(
+    "https://my.smoothiefroot.com/api/fruit/watermelon"
+)
 
+st.text(smoothiefroot_response)
 
 
 # Checkbox
