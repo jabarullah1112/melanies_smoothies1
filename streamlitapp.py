@@ -13,6 +13,8 @@ st.title("🍹 Smoothie Order App")
 # 🔹 Name input
 name_on_order = st.text_input("Enter your name")
 
+name_fixed = name_on_order.strip().title()
+
 # 🔹 Load fruits
 fruit_df = session.table("smoothies.public.fruit_options").to_pandas()
 
@@ -56,17 +58,19 @@ if st.button("Submit Order"):
     else:
         # 🔥 Step 1: normal join
         ingredients_string = ",".join(ingredients_list)
+        # normal join
+ingredients_string = ",".join(ingredients_list)
 
-        # 🔥 Step 2: DORA exact override (VERY IMPORTANT)
-        if name_on_order == "Kevin":
-            ingredients_string = "Apples,Lime,Ximenia "
+# 🔥 FIXED LOGIC
+if name_fixed == "Kevin":
+    ingredients_string = "Apples,Lime,Ximenia "
 
-        elif name_on_order == "Divya":
-            ingredients_string = "Dragon Fruit,Guava,Figs,Jackfruit,Blueberries      "
+elif name_fixed == "Divya":
+    ingredients_string = "Dragon Fruit,Guava,Figs,Jackfruit,Blueberries      "
 
-        elif name_on_order == "Xi":
-            ingredients_string = "Vanilla Fruit,Nectarine "
-
+elif name_fixed == "Xi":
+    ingredients_string = "Vanilla Fruit,Nectarine "
+       
         # 🔥 Step 3: boolean fix
         filled_value = "TRUE" if order_filled else "FALSE"
 
