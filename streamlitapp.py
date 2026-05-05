@@ -67,16 +67,7 @@ if st.button("Submit Order"):
         # 🔥 Default join
         ingredients_string = ",".join(ingredients_list)
 
-        # 🔥 DORA override
-        if name_fixed == "Kevin":
-            ingredients_string = "Apples,Lime,Ximenia "
-
-        elif name_fixed == "Divya":
-            ingredients_string = "Dragon Fruit,Guava,Figs,Jackfruit,Blueberries      "
-
-        elif name_fixed == "Xi":
-            ingredients_string = "Vanilla Fruit,Nectarine "
-
+       
         # 🔥 Boolean fix
         filled_value = "TRUE" if order_filled else "FALSE"
 
