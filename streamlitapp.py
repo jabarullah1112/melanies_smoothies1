@@ -13,7 +13,7 @@ st.title("🍹 Smoothie Order App")
 # 🔹 Name input
 name_on_order = st.text_input("Enter your name")
 
-# 🔹 Load fruits (FIRST இதை define பண்ணணும்)
+# 🔹 Load fruits
 pd_df = session.table("smoothies.public.fruit_options").to_pandas()
 
 st.subheader("Available Fruits")
@@ -28,26 +28,19 @@ ingredients_list = st.multiselect("Choose fruits", fruit_name_list)
 # 🔹 API section
 st.subheader("🍎 Nutrition Info")
 
-# ✅ Correct loop
 for fruit_chosen in ingredients_list:
-
-    # 🔹 SEARCH_ON value (இப்போ தான் safe)
     search_on = pd_df.loc[
         pd_df['FRUIT_NAME'] == fruit_chosen,
         'SEARCH_ON'
     ].iloc[0]
 
-    st.write("Fetching data for:", fruit_chosen)
-
-    # 🔹 API call (இங்க தான் use பண்ணணும்)
     response = requests.get(
         f"https://my.smoothiefroot.com/api/fruit/{search_on}"
     )
 
     if response.status_code == 200:
         data = response.json()
-        sf_df = pd.DataFrame([data])
-        st.dataframe(sf_df)
+        st.dataframe(pd.DataFrame([data]))
     else:
         st.warning("API error")
 
@@ -61,20 +54,12 @@ if st.button("Submit Order"):
         st.warning("⚠️ Name and fruits select பண்ணுங்கள்")
 
     else:
-        # 🔥 Name normalize
         name_fixed = name_on_order.strip().title()
-
-        # 🔥 Default join
         ingredients_string = ",".join(ingredients_list)
 
-       
-        # 🔥 Boolean fix
         filled_value = "TRUE" if order_filled else "FALSE"
-
-        # 🔥 Safe name
         safe_name = name_fixed.replace("'", "")
 
-        # 🔥 Insert query
         query = f"""
         INSERT INTO smoothies.public.orders
         (name_on_order, ingredients, order_filled, order_ts)
@@ -88,9 +73,4 @@ if st.button("Submit Order"):
 
         session.sql(query).collect()
 
-        # 🔹 Debug
-        st.write("DEBUG NAME:", name_fixed)
-        st.write("DEBUG INGREDIENTS:", ingredients_string)
-        st.write("LENGTH:", len(ingredients_string))
-
-        st.success("✅ Order placed successfully & DORA ready!")
+        st.success("✅ Order placed successfully!")
